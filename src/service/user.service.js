@@ -4,15 +4,21 @@ class UserService {
   // 往数据库创建用户
   async createUser(user_name, password) {
     // 插入数据
-
-    try {
-      const res = await User.create({ user_name, password, is_admin: 0 });
-
-    } catch (error) {
-
-    }
-
+    const res = await User.create({ user_name, password, is_admin: 0 });
     return res.dataValues
+  }
+
+  async getUserInfo(args) {
+    const whereOpt = { ...args }
+    // id && Object.assign(whereOpt, { id })
+
+    // 查询传入字段是否在表中已存在且有值
+    const res = await User.findOne({
+      attributes: ['id', 'user_name', 'password', 'is_admin'],
+      where: whereOpt
+    })
+
+    return res ? res.dataValues : null
   }
 }
 
